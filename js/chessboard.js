@@ -5,56 +5,56 @@ export default {
 
 // ****************************
 
-var tiles = [];
+var diagonals = [];
+var highlighted = [];
 
 function draw(boardEl) {
+  // Set up all major and minor diagonals
+  for (let i = 0; i < 30; i++) {
+    diagonals.push([]);
+  }
+
   for (let i = 0; i < 8; i++) {
     let rowEl = document.createElement("div");
-    let rowTiles = [];
-    tiles.push(rowTiles);
     for (let j = 0; j < 8; j++) {
       let tileEl = document.createElement("div");
+
+      // Discover which two diagonals the tile belongs to
+      let majorDiag = diagonals[7 - (i - j)];
+      let minorDiag = diagonals[15 + (i + j)];
+      // Save reference to tile into its two diagonals
+      majorDiag.push(tileEl);
+      minorDiag.push(tileEl);
+
       tileEl.dataset.row = i;
       tileEl.dataset.col = j;
       rowEl.appendChild(tileEl);
-      rowTiles.push(tileEl);
     }
     boardEl.appendChild(rowEl);
   }
 }
 
 function highlight(tileEl) {
-  for (let row of tiles) {
-    for (let el of row) {
+  for (let diagonal of highlighted) {
+    for (let el of diagonal) {
       el.classList.remove("highlighted");
     }
   }
+  highlighted = [];
+
   if (tileEl) {
-    let tileRowIdx = tileEl.dataset.row;
-    let tileColIdx = tileEl.dataset.col;
-    // Traversing major diagonal, upward and leftward
-    for (let i = tileRowIdx, j = tileColIdx; i >= 0 && j >= 0; i--, j--) {
-      let el = findTile(i, j);
-      el.classList.add("highlighted");
-    }
-    // Traversing major diagonal, downward and rightward
-    for (let i = tileRowIdx, j = tileColIdx; i <= 7 && j <= 7; i++, j++) {
-      let el = findTile(i, j);
-      el.classList.add("highlighted");
-    }
-    // Traversing minor diagonal, upward and rightward
-    for (let i = tileRowIdx, j = tileColIdx; i >= 0 && j <= 7; i--, j++) {
-      let el = findTile(i, j);
-      el.classList.add("highlighted");
-    }
-    // Traversing minor diagonal, downward and leftward
-    for (let i = tileRowIdx, j = tileColIdx; i <= 7 && j >= 0; i++, j--) {
-      let el = findTile(i, j);
-      el.classList.add("highlighted");
+    let tileRowIdx = Number(tileEl.dataset.row);
+    let tileColIdx = Number(tileEl.dataset.col);
+
+    let majorDiag = diagonals[7 - (tileRowIdx - tileColIdx)];
+    let minorDiag = diagonals[15 + (tileRowIdx + tileColIdx)];
+
+    highlighted = [majorDiag, minorDiag];
+
+    for (let diagonal of highlighted) {
+      for (let el of diagonal) {
+        el.classList.add("highlighted");
+      }
     }
   }
-}
-
-function findTile(row, col) {
-  return tiles[row][col];
 }
