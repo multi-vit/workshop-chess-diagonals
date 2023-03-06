@@ -5,10 +5,9 @@ export default {
 
 // ****************************
 
-var origBoardEl;
+var tiles;
 
 function draw(boardEl) {
-  origBoardEl = boardEl;
   for (let i = 0; i < 8; i++) {
     let rowEl = document.createElement("div");
     for (let j = 0; j < 8; j++) {
@@ -17,16 +16,17 @@ function draw(boardEl) {
     }
     boardEl.appendChild(rowEl);
   }
+  tiles = boardEl.querySelectorAll("div > div");
 }
 
 function highlight(tileEl) {
-  var tiles = origBoardEl.querySelectorAll("div > div");
   for (let el of tiles) {
     el.classList.remove("highlighted");
   }
   if (tileEl) {
     let rowEl = tileEl.parentNode;
-    let tileRowIdx = [...origBoardEl.childNodes].findIndex((el) => el == rowEl);
+    let boardEl = rowEl.parentNode;
+    let tileRowIdx = [...boardEl.childNodes].findIndex((el) => el == rowEl);
     let tileColIdx = [...rowEl.childNodes].findIndex((el) => el == tileEl);
     // Traversing major diagonal, upward and leftward
     for (let i = tileRowIdx, j = tileColIdx; i >= 0 && j >= 0; i--, j--) {
