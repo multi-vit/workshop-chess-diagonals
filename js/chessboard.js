@@ -12,6 +12,8 @@ function draw(boardEl) {
     let rowEl = document.createElement("div");
     for (let j = 0; j < 8; j++) {
       let tileEl = document.createElement("div");
+      tileEl.dataset.row = i;
+      tileEl.dataset.col = j;
       rowEl.appendChild(tileEl);
     }
     boardEl.appendChild(rowEl);
@@ -52,7 +54,9 @@ function highlight(tileEl) {
 }
 
 function findTile(row, col) {
-  return document.querySelector(
-    `#board > div:nth-child(${row + 1}) > div:nth-child(${col + 1})`
-  );
+  for (let el of tiles) {
+    if (el.dataset.row == row && el.dataset.col == col) {
+      return el;
+    }
+  }
 }
