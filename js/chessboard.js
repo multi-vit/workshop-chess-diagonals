@@ -7,6 +7,7 @@ export default {
 
 var diagonals = [];
 var highlighted = [];
+var tileDiagonals = new Map();
 
 function draw(boardEl) {
   // Set up all major and minor diagonals
@@ -25,9 +26,8 @@ function draw(boardEl) {
       // Save reference to tile into its two diagonals
       majorDiag.push(tileEl);
       minorDiag.push(tileEl);
-
-      tileEl.dataset.row = i;
-      tileEl.dataset.col = j;
+      // Store reference from tile to its two diagonals
+      tileDiagonals.set(tileEl, [majorDiag, minorDiag]);
       rowEl.appendChild(tileEl);
     }
     boardEl.appendChild(rowEl);
@@ -43,14 +43,9 @@ function highlight(tileEl) {
   highlighted = [];
 
   if (tileEl) {
-    let tileRowIdx = Number(tileEl.dataset.row);
-    let tileColIdx = Number(tileEl.dataset.col);
-
-    let majorDiag = diagonals[7 - (tileRowIdx - tileColIdx)];
-    let minorDiag = diagonals[15 + (tileRowIdx + tileColIdx)];
-
-    highlighted = [majorDiag, minorDiag];
-
+    // Retrieve diagonal tuple from tileDiagonals map using the tileElement key
+    highlighted = tileDiagonals.get(tileEl);
+    // Iterate through diagonals to highlight relevant tiles
     for (let diagonal of highlighted) {
       for (let el of diagonal) {
         el.classList.add("highlighted");
