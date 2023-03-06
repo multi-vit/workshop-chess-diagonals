@@ -5,25 +5,29 @@ export default {
 
 // ****************************
 
-var tiles;
+var tiles = [];
 
 function draw(boardEl) {
   for (let i = 0; i < 8; i++) {
     let rowEl = document.createElement("div");
+    let rowTiles = [];
+    tiles.push(rowTiles);
     for (let j = 0; j < 8; j++) {
       let tileEl = document.createElement("div");
       tileEl.dataset.row = i;
       tileEl.dataset.col = j;
       rowEl.appendChild(tileEl);
+      rowTiles.push(tileEl);
     }
     boardEl.appendChild(rowEl);
   }
-  tiles = boardEl.querySelectorAll("div > div");
 }
 
 function highlight(tileEl) {
-  for (let el of tiles) {
-    el.classList.remove("highlighted");
+  for (let row of tiles) {
+    for (let el of row) {
+      el.classList.remove("highlighted");
+    }
   }
   if (tileEl) {
     let tileRowIdx = tileEl.dataset.row;
@@ -52,9 +56,5 @@ function highlight(tileEl) {
 }
 
 function findTile(row, col) {
-  for (let el of tiles) {
-    if (el.dataset.row == row && el.dataset.col == col) {
-      return el;
-    }
-  }
+  return tiles[row][col];
 }
