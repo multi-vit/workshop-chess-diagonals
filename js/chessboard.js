@@ -26,10 +26,8 @@ function highlight(tileEl) {
     el.classList.remove("highlighted");
   }
   if (tileEl) {
-    let rowEl = tileEl.parentNode;
-    let boardEl = rowEl.parentNode;
-    let tileRowIdx = [...boardEl.childNodes].findIndex((el) => el == rowEl);
-    let tileColIdx = [...rowEl.childNodes].findIndex((el) => el == tileEl);
+    let tileRowIdx = tileEl.dataset.row;
+    let tileColIdx = tileEl.dataset.col;
     // Traversing major diagonal, upward and leftward
     for (let i = tileRowIdx, j = tileColIdx; i >= 0 && j >= 0; i--, j--) {
       let el = findTile(i, j);
